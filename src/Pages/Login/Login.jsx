@@ -82,11 +82,11 @@ const Login=()=>{
 
         <div className="Email enter">
             <MdAttachEmail />
-            <input type="text" value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder="Enter " />
+            <input type="text" value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder="Enter email " />
         </div>
           <div className="Password enter">
             <RiLockPasswordFill />
-            <input value={password} onChange={(e)=>setPassword(e.target.value)} type="password"   placeholder="Enter " />
+            <input value={password} onChange={(e)=>setPassword(e.target.value)} type="password"   placeholder="Enter password " />
         </div>
         {
             logstate === "signup" ? <p onClick={()=>setLogstate("login")}>Already have an account? <span>Login</span></p> :
