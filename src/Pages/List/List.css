@@ -26,7 +26,7 @@
   grid-template-columns: 60px 1fr; /* image and details side by side */
   align-items: center;
   gap: 10px;
-  background: #f9f9f9;
+  background: var(--bg-color);
   border-radius: 10px;
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -60,6 +60,7 @@
   .product-item {
     grid-template-columns: 1fr; /* stack content vertically */
     text-align: center;
+
   }
 
   .product-item img {
