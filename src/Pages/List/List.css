@@ -1,0 +1,67 @@
+.list {
+  width: 100%;
+  padding: 20px;
+}
+
+/* Heading Row */
+.heading {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+/* Products Grid */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* 👈 responsive grid */
+  gap: 15px;
+}
+
+/* Individual Product */
+.product-item {
+  display: grid;
+  grid-template-columns: 60px 1fr; /* image and details side by side */
+  align-items: center;
+  gap: 10px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Image Styling */
+.product-item img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Text Styling */
+.product-item p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  .heading {
+    display: none; /* hide the top heading row on mobile */
+  }
+
+  .products {
+    grid-template-columns: repeat(2, 1fr); /* show 2 products per row */
+  }
+
+  .product-item {
+    grid-template-columns: 1fr; /* stack content vertically */
+    text-align: center;
+  }
+
+  .product-item img {
+    margin: 0 auto;
+  }
+}
