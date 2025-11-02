@@ -47,7 +47,7 @@ import "./Add.css"
 
             
 
-            const response=await axios.post("http://localhost:4000/products/upload",formdata, { headers: { "Content-Type": "multipart/form-data" } })
+            const response=await axios.post("https://goldback2.onrender.com/products/upload",formdata, { headers: { "Content-Type": "multipart/form-data" } })
 
             if(response){
                 setCategory('')

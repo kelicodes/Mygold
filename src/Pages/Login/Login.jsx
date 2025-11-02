@@ -27,7 +27,7 @@ const Login=()=>{
                 formdata.append("password",password)
                 console.log("we on 1")
 
-                const response= await axios.post("http://localhost:4000/user/reg",{
+                const response= await axios.post("https://goldback2.onrender.com/user/reg",{
                     email,password,name
                 })
 
@@ -45,7 +45,7 @@ const Login=()=>{
                  console.log("we on 202")
                 
 
-                const response= await axios.post("http://localhost:4000/user/login",{
+                const response= await axios.post("https://goldback2.onrender.com/user/login",{
                     email,password
                 })
 
