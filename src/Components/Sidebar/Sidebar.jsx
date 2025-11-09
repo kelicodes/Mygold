@@ -18,7 +18,7 @@ export const Sidebar = () => {
         <p>List</p>
       </Link>
 
-      <Link to="/" className="side-link">
+      <Link to="/orders" className="side-link">
         <MdAddBusiness className="icon" />
         <p>Orders</p>
       </Link>

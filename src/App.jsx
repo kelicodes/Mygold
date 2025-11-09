@@ -5,6 +5,7 @@ import List from "./Pages/List/List.jsx";
 import Login from "./Pages/Login/Login.jsx";
 import Navbar from "./Components/Navbar/Navbar.jsx";
 import Sidebar from "./Components/Sidebar/Sidebar.jsx";
+import Orders from "./Components/Mockorder/Mock.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -20,6 +21,7 @@ const App = () => {
         <Routes>
           <Route path="/add" element={<Add />} />
           <Route path="/list" element={<List />} />
+          <Route path="/orders" element={<Orders/>}/>
           <Route path="/" element={<Login />} />
         </Routes>
       </div>
