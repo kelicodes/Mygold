@@ -1,79 +1,53 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { toast } from "react-toastify";
-import "./Orders.css";
+import "./Mock.css";
+
+const BASE_URL = "https://goldback2.onrender.com";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Mock orders data
-  const mockOrders = [
-    {
-      _id: "order123",
-      status: "Pending",
-      paymentMethod: "Mpesa",
-      totalAmount: 4500,
-      items: [
-        {
-          productId: "prod1",
-          name: "Gold Ring",
-          quantity: 1,
-          price: 2000,
-          image:
-            "https://images.unsplash.com/photo-1600185364400-14d6db7f6aa6?fit=crop&w=80&h=80",
-        },
-        {
-          productId: "prod2",
-          name: "Necklace",
-          quantity: 2,
-          price: 1250,
-          image:
-            "https://images.unsplash.com/photo-1598300051211-9b3f19bfc6a1?fit=crop&w=80&h=80",
-        },
-      ],
-    },
-    {
-      _id: "order456",
-      status: "Delivered",
-      paymentMethod: "Credit Card",
-      totalAmount: 3200,
-      items: [
-        {
-          productId: "prod3",
-          name: "Bracelet",
-          quantity: 1,
-          price: 3200,
-          image:
-            "https://images.unsplash.com/photo-1598300051211-9b3f19bfc6a1?fit=crop&w=80&h=80",
-        },
-      ],
-    },
-  ];
+  const getToken = () => localStorage.getItem("token");
+  const getAuthHeader = () => ({ headers: { Authorization: `Bearer ${getToken()}` } });
 
-  // Fetch orders (mock)
+  // Fetch orders from backend
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      // Simulate network delay
-      setTimeout(() => {
-        setOrders(mockOrders);
-        setLoading(false);
-      }, 1000);
-    } catch (e) {
-      console.error(e);
+      const res = await axios.get(`${BASE_URL}/orders/all`, getAuthHeader());
+      if (res.data.success && res.data.orders) {
+        const uniqueOrders = Array.from(new Map(res.data.orders.map(o => [o._id, o])).values());
+        setOrders(uniqueOrders);
+      } else {
+        setOrders([]);
+        toast.info("No orders found");
+      }
+    } catch (err) {
+      console.error("Fetch Orders Error:", err);
       toast.error("Failed to fetch orders");
+      setOrders([]);
+    } finally {
       setLoading(false);
     }
   };
 
-  // Mock handleStatusChange
-  const handleStatusChange = (orderId, newStatus) => {
-    setOrders((prev) =>
-      prev.map((order) =>
-        order._id === orderId ? { ...order, status: newStatus } : order
-      )
-    );
-    toast.success(`Order status updated to ${newStatus}`);
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      await axios.put(
+        `${BASE_URL}/orders/${orderId}/status`,
+        { status: newStatus },
+        getAuthHeader()
+      );
+      setOrders(prev =>
+        prev.map(order => (order._id === orderId ? { ...order, status: newStatus } : order))
+      );
+      toast.success(`Order status updated to ${newStatus}`);
+    } catch (err) {
+      console.error("Update Status Error:", err);
+      toast.error("Failed to update order status");
+    }
   };
 
   useEffect(() => {
@@ -81,52 +55,35 @@ const Orders = () => {
   }, []);
 
   if (loading) return <p className="loading-text">Loading your orders...</p>;
-  if (!orders || orders.length === 0)
-    return <p className="no-orders-text">You have no orders yet.</p>;
+  if (!orders || orders.length === 0) return <p className="no-orders-text">You have no orders yet.</p>;
 
-  const allowedStatuses = [
-    "Pending",
-    "Paid",
-    "Packaged",
-    "Out for Delivery",
-    "Delivered",
-    "Cancelled",
-  ];
+  const allowedStatuses = ["Pending", "Paid", "Packaged", "Out for Delivery", "Delivered", "Cancelled"];
 
   return (
     <div className="orders-container">
       <h2 className="orders-title">My Orders</h2>
-      {orders.map((order) => (
-        <div key={order._id} className="order-card">
+
+      {orders.map((order, orderIndex) => (
+        <div key={`${order._id}-${orderIndex}`} className="order-card">
           <div className="order-header">
-            <p>
-              <strong>Order ID:</strong> {order._id}
-            </p>
-            <span
-              className={`order-status ${
-                order.status?.toLowerCase().replace(/ /g, "-") || "pending"
-              }`}
-            >
+            <p><strong>Order ID:</strong> {order._id}</p>
+            <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}</p>
+            <span className={`order-status ${order.status?.toLowerCase().replace(/ /g, "-") || "pending"}`}>
               {order.status || "Pending"}
             </span>
           </div>
 
-          <p>
-            <strong>Payment Method:</strong> {order.paymentMethod}
-          </p>
-          <p>
-            <strong>Total:</strong> KES {order.totalAmount}
-          </p>
+          <p><strong>Payment Method:</strong> {order.paymentMethod || "N/A"}</p>
+          <p><strong>Total:</strong> KES {order.totalAmount || 0}</p>
 
           <div className="order-items">
             <h4>Items:</h4>
             <div className="items-grid">
-              {order.items.map((item) => (
-                <div key={item.productId} className="item-card">
-                  <img src={item.image} alt={item.name} className="item-image" />
-                  <p className="item-name">{item.name}</p>
-                  <p className="item-qty">Qty: {item.quantity}</p>
-                  <p className="item-price">KES {item.price}</p>
+              {order.items?.map((item, itemIndex) => (
+                <div key={`${item.productId}-${itemIndex}`} className="item-card">
+                  <p className="item-name">{item.name || "Unknown"}</p>
+                  <p className="item-qty">Qty: {item.quantity || 0}</p>
+                  <p className="item-price">KES {item.price || 0}</p>
                 </div>
               ))}
             </div>
@@ -136,13 +93,11 @@ const Orders = () => {
             <label htmlFor={`status-${order._id}`}>Update Status:</label>
             <select
               id={`status-${order._id}`}
-              value={order.status}
+              value={order.status || "Pending"}
               onChange={(e) => handleStatusChange(order._id, e.target.value)}
             >
               {allowedStatuses.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
+                <option key={status} value={status}>{status}</option>
               ))}
             </select>
           </div>

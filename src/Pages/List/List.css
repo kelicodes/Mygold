@@ -1,35 +1,53 @@
+:root {
+  --bg-color: #ffffff;
+  --card-bg: #f9f9f9;
+  --text-color: #333;
+  --accent-color: #4caf50;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --remove-color: #f44336;
+}
+
 .list {
   width: 100%;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Heading Row */
 .heading {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 2fr 1fr 1fr;
   font-weight: bold;
   border-bottom: 2px solid #ddd;
   padding-bottom: 10px;
-  margin-bottom: 15px;
+  color: var(--text-color);
 }
 
 /* Products Grid */
 .products {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* 👈 responsive grid */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
 }
 
-/* Individual Product */
+/* Individual Product Card */
 .product-item {
   display: grid;
-  grid-template-columns: 60px 1fr; /* image and details side by side */
+  grid-template-columns: 60px 1fr 1fr auto;
   align-items: center;
   gap: 10px;
-  background: var(--bg-color);
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 8px var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px var(--shadow);
 }
 
 /* Image Styling */
@@ -45,25 +63,48 @@
   margin: 0;
   font-size: 14px;
   color: var(--text-color);
+  line-height: 1.4;
+}
+
+/* Remove button */
+.product-item .remove {
+  cursor: pointer;
+  color: var(--remove-color);
+  font-weight: bold;
+  text-align: center;
+  transition: color 0.2s;
+}
+
+.product-item .remove:hover {
+  color: darkred;
 }
 
 /* Responsive Adjustments */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .heading {
-    display: none; /* hide the top heading row on mobile */
+    display: none;
   }
 
   .products {
-    grid-template-columns: repeat(2, 1fr); /* show 2 products per row */
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .product-item {
-    grid-template-columns: 1fr; /* stack content vertically */
+    grid-template-columns: 1fr;
     text-align: center;
-
   }
 
   .product-item img {
-    margin: 0 auto;
+    margin: 0 auto 10px auto;
+  }
+
+  .product-item .remove {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products {
+    grid-template-columns: 1fr;
   }
 }

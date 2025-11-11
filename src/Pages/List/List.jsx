@@ -48,13 +48,7 @@ const List = () => {
 
   return (
     <div className="list">
-      <div className="heading">
-        <p>Image</p>
-        <p>Name</p>
-        <p>Price</p>
-        <p>Remove</p>
-      </div>
-
+    
       <div className="products">
         {products.length > 0 ? (
           products.map((item, index) => (

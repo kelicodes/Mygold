@@ -20,6 +20,7 @@ const Orders = () => {
 
       if (response.data.success) {
         setOrders(response.data.orders);
+        console.log(orders)
       } else {
         toast.error(response.data.message || "Failed to fetch orders");
       }
